@@ -31,8 +31,7 @@ const Student = () => {
                 <Table className="table table-borderless" border="1">
                     <thead>
                     <tr>
-                        <th className="table-secondary" colSpan="11">Crear una cuenta market --formulario de
-                            guardado--
+                        <th className="table-secondary" colSpan="11">Crear una cuenta market
                         </th>
                     </tr>
                     </thead>
