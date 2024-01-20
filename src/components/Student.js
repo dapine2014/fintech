@@ -37,53 +37,55 @@ const Student = () => {
                     </thead>
                     <tbody>
                     <tr>
-                        <td>#</td>
-                        <td>
+                        <td align="center">#</td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="Nombre"/>
                             </div>
                         </td>
-                        <td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="Apellido"/>
                             </div>
                         </td>
-                        <td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="Edad"/>
                             </div>
                         </td>
-                        <td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="Email"/>
                             </div>
                         </td>
-                        <td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="Ciudad" aria-label="Names"/>
                             </div>
                         </td>
-                        <td>
+                        <td align="center">
                             <div className="col-sm-10">
                                 <Input type="text" className="form-control" placeholder="zona/horaria"
                                        aria-label="Names"/>
                             </div>
                         </td>
-                        <td colSpan="3"><center><Button color="success">Guardar</Button></center></td>
+                        <td colSpan="3" align="center"><center><Button color="success">Guardar</Button></center></td>
                     </tr>
                     {students.map((student) => (
                         <tr key={student.id}>
-                            <td>{student.id}</td>
-                            <td>{student.nombre}</td>
-                            <td>{student.apellido}</td>
-                            <td>{student.edad}</td>
-                            <td>{student.email}</td>
-                            <td>{student.ciudad}</td>
-                            <td>{student.zonaHoraria}</td>
+                            <td align="center">{student.id}</td>
+                            <td align="center">{student.nombre}</td>
+                            <td align="center">{student.apellido}</td>
+                            <td align="center">{student.edad}</td>
+                            <td align="center">{student.email}</td>
+                            <td align="center">{student.ciudad}</td>
+                            <td align="center">{student.zonaHoraria}</td>
                             <td>
                                 <Button color="primary">Editar</Button>
                             </td>
-                            <td>  <Button color="danger">Editar</Button></td>
+                            <td>
+                                <Button color="danger">Editar</Button>
+                            </td>
                         </tr>
                     ))}
                     </tbody>
