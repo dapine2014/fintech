@@ -1,9 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Container, Input, Table} from 'reactstrap'
-import {formDataEstudent,clearDataEstuden,editDataStuden} from '../functions/functions'
+import {formDataEstudent,clearDataEstuden,editDataStuden,showMessage} from '../functions/functions'
 import axios from 'axios';
+import withReactContent from "sweetalert2-react-content";
+import validator from 'validator';
+import Swal from "sweetalert2";
 
 const Student = () => {
+
+
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
@@ -23,14 +28,11 @@ const Student = () => {
         };
         fetchData();
     }, []);
-
-
     const StudenDataStatus = async () => {
         try {
             const formData = formDataEstudent();
             const response = await axios.post('http://localhost:31000/student/api/saveupdate', formData);
             if (response.data.succes === 200) {
-
                 // Actualizar el estado local sin realizar otra solicitud GET
                 const updatedStudents = [...students];
                 const existingStudentIndex = updatedStudents.findIndex(
@@ -38,10 +40,11 @@ const Student = () => {
                 );
 
                 if (existingStudentIndex !== -1) {
-                    // Si el estudiante ya existe en el array, actualiza sus datos
                     updatedStudents[existingStudentIndex] = response.data.data;
+                    showMessage("Dato modificado con exito","success");
                 } else {
                     // Si el estudiante no existe en el array, agrégalo
+                    showMessage("Dato creado con exito","success");
                     updatedStudents.push(response.data.data);
                 }
 
@@ -56,6 +59,50 @@ const Student = () => {
         }
     };
 
+    const deleteStudent = async (id, info) => {
+        //const opcion = window.confirm("Estás Seguro que deseas Eliminar el elemento : " + info);
+        //const option = showConfirm("Estás Seguro que deseas Eliminar el elemento : "+ info, "question");
+
+        const MySwal = withReactContent(Swal);
+        let status = false;
+        MySwal.fire({
+            title: "Estás Seguro que deseas Eliminar el elemento : "+ info,
+            icon:"question",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "SI",
+            denyButtonText: "NO"
+        }).then(async (result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+
+                try {
+                    const response = await axios.delete('http://localhost:31000/student/api/delete/' + id);
+                    if (response.data.succes === 200) {
+                        // Actualizar el estado local sin realizar otra solicitud GET
+                        const updatedStudents = students.filter(student => student.id !== id);
+                        setStudents(updatedStudents);
+                        console.log('Estudiante eliminado exitosamente');
+                        MySwal.fire("Estudiante eliminado exitosamente", "", "success");
+                    }
+                } catch (error) {
+                    console.error('Error al realizar la solicitud DELETE:', error.message);
+                }
+
+            } else if (result.isDenied) {
+                MySwal.fire("Cambio no efectuado", "", "info");
+            }
+        });
+    };
+
+    const  validarNumber = ()=> {
+        console.log("entro "+ Number(document.getElementById("edad").value))
+        document.getElementById("edad").value = isNaN(Number(document.getElementById("edad").value)) ? 0 : document.getElementById("edad").value;
+    }
+
+    const validarEmail = () =>{
+       return validator.isEmail(document.getElementById("email").value);
+    }
 
     return (
         <>
@@ -86,7 +133,7 @@ const Student = () => {
                         </td>
                         <td align="center">
                             <div className="col-sm-10">
-                                <Input id="edad" type="text" className="form-control" placeholder="Edad"/>
+                                <Input id="edad" type="text" className="form-control" placeholder="Edad" onChange={()=>validarNumber()  }/>
                             </div>
                         </td>
                         <td align="center">
@@ -100,7 +147,7 @@ const Student = () => {
                             </div>
                         </td>
                         <td colSpan="3" align="center">
-                            <center><Button color="success" onClick={() => StudenDataStatus()  }>Guardar</Button></center>
+                            <center><Button color="success" onClick={() => validarEmail() ? StudenDataStatus() : Swal.fire("correo invalido", "", "error") }>Guardar</Button></center>
                         </td>
                     </tr>
                     {students.map((student) => (
@@ -120,13 +167,16 @@ const Student = () => {
                                                                                          student.ciudad)   }>Editar</Button>
                             </td>
                             <td>
-                                <Button color="danger">Borrar</Button>
+                                <Button color="danger" onClick={() => deleteStudent(student.id, student.nombre+" "+student.apellido) }>Borrar</Button>
                             </td>
                         </tr>
                     ))}
                     </tbody>
                 </Table>
             </Container>
+
+
+
         </>
     )
 }
