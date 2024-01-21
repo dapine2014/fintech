@@ -41,6 +41,38 @@ export function editDataStuden(id,nombre, apellido, edad, email, ciudad){
     document.getElementById("ciudad").value = ciudad;
 }
 
+export function showMessage(sms, ico){
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+        title:sms,
+        icon:ico
+    });
+}
+
+export function  showConfirm(sms,ico){
+    const MySwal = withReactContent(Swal);
+    let status = false;
+    MySwal.fire({
+        title: sms,
+        icon:ico,
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "SI",
+        denyButtonText: "NO"
+    }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            status = true
+            return status;
+        } else if (result.isDenied) {
+            status = false;
+            return status;
+        }
+    });
+}
+
+
+
 function onFocus(foc){
     if(foc !==''){
         document.getElementById(foc).focus()
